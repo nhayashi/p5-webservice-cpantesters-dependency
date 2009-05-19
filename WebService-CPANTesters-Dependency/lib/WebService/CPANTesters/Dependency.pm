@@ -14,7 +14,6 @@ use Perl::Version;
 use URI::Template::Restrict;
 use XML::LibXML;
 use XML::LibXML::XPathContext;
-use Smart::Comments;
 
 __PACKAGE__->mk_accessors(qw/
     perl
