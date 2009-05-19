@@ -8,13 +8,29 @@ our $VERSION = '0.01';
 use base qw/Class::Accessor::Fast/;
 
 use Carp qw/croak/;
+use List::Rubyish;
 use LWP::UserAgent;
 use Perl::Version;
 use URI::Template::Restrict;
 use XML::LibXML::XPathContext;
 use Smart::Comments;
 
-__PACKAGE__->mk_accessors(qw/perl os module depth start_depth dependencies/);
+__PACKAGE__->mk_accessors(qw/
+    perl
+    os
+    module
+    depth
+    warning
+    text_result
+    is_pure_perl
+    total_results
+    passes
+    fails
+    unknowns
+    nas
+    is_core
+    dependencies
+ /);
 
 our ($PERL_VERSION) = Perl::Version->new($])->normal =~ m/^v(.*)$/;
 our $ENDPOINT_TMPL  = URI::Template::Restrict->new(
@@ -24,9 +40,8 @@ our $ENDPOINT_TMPL  = URI::Template::Restrict->new(
 sub new {
     my ($class, $args) = @_;
 
-    $args->{dependencies} ||= [];
+    $args->{dependencies} ||= List::Rubyish->new([]);
     $args->{depth} ||= 0;
-    $args->{start_depth} ||= 0;
 
     return $class->SUPER::new($args);
 }
@@ -67,63 +82,87 @@ sub find {
     my @dep_nodes = $xpc->findnodes(q|//cpandeps/dependency|);
     my $dep_self_node = shift @dep_nodes;
 
-    for my $dep_node (@dep_nodes) {
-        next ($dep_node->findvalue(q|./textresult|) !~ /^core module$/i);
-        push @{$self->{dependencies}}, $dep_node->findvalue(q|./module|);
+    for (my $i = 0; $i < $#dep_nodes; $i++) {
+        my $dep_node = $dep_nodes[$i];
+        if ($self->parse_dependency($self, \@dep_nodes, \$i)) {
+            $i--;
+        }
     }
+
+#     for my $dep_node (@dep_nodes) {
+#         my $dep_args = +{
+#             module => $dep_node->findvalue(q|./module|),
+#             depth  => $dep_node->findvalue(q|./depth|),
+#             warning => $dep_node->findvalue(q|./warning|),
+#             text_result => $dep_node->findvalue(q|./textresult|),
+#             is_pure_perl => $dep_node->findvalue(q|./ispureperl|),
+#             total_results => $dep_node->findvalue(q|./totalresults|),
+#             passes => $dep_node->findvalue(q|./passes|) || undef,
+#             fails => $dep_node->findvalue(q|./fails|) || undef,
+#             nas => $dep_node->findvalue(q|./nas|) || undef,
+#         };
+
+#         $dep_args->{is_core} = (defined $dep_args->{text_result} && $dep_args->{text_result} eq 'Core module') ? 1 : 0;
+#         $dep_args->{start_depth} = $self->start_depth + $dep_args->{depth};
+
+#         my $dependency = WebService::CPANTesters::Dependency->new($dep_args);
+
+#         ### $dep_args
+
+#         $self->dependencies->push($dependency);
+#     }
+    1;
 }
 
-sub find_recursive {
-    my ($self, $module, $args) = @_;
+sub naritoshi {
+    my ($self, $parent, $ret, $deps) = @_;
+    $parent ||= $self;
+    $ret    ||= [];
+    $deps   ||= $parent->dependencies;
 
-    croak(q|Please specifiy module name.|) unless ($module);
+    for my $dep (@{$deps->to_a}) {
+        ### $dep
+        push(@$ret, +{ module =>  $dep->module, depth => $dep->depth });
+        $self->naritoshi($dep, $ret, $dep->dependencies);
+    }
 
-    $args ||= +{};
-    $args = +{
-        perl => $PERL_VERSION,
-        os => 'Linux',
-        %$args,
-        xml => 1,
-        module => $module,
+    return @$ret;
+}
+
+
+sub parse_dependency {
+    my ($self, $parent, $dep_nodes, $idx_ref) = @_;
+
+    my $dep_node = $dep_nodes->[$$idx_ref];
+    return 0 unless ($dep_node);
+    return 0 unless ($dep_node->findvalue(q|./depth|) > $parent->depth);
+    
+    my $dep_args = +{
+        module => $dep_node->findvalue(q|./module|),
+        depth  => $dep_node->findvalue(q|./depth|),
+        warning => $dep_node->findvalue(q|./warning|),
+        text_result => $dep_node->findvalue(q|./textresult|),
+        is_pure_perl => $dep_node->findvalue(q|./ispureperl|),
+        total_results => $dep_node->findvalue(q|./totalresults|),
+        passes => $dep_node->findvalue(q|./passes|) || undef,
+        fails => $dep_node->findvalue(q|./fails|) || undef,
+        nas => $dep_node->findvalue(q|./nas|) || undef,
     };
 
-    ### $args
-    
-    my $uri = $ENDPOINT_TMPL->process($args);
+    $dep_args->{is_core} = (defined $dep_args->{text_result} && $dep_args->{text_result} eq 'Core module') ? 1 : 0;
+    # $dep_args->{start_depth} = $parent->start_depth + $dep_args->{depth};
 
-    ### $uri
-    
-    my $ua  = LWP::UserAgent->new;
-    my $res = $ua->get($uri);
+    my $dependency = WebService::CPANTesters::Dependency->new($dep_args);
+    $parent->dependencies->push($dependency);
 
-    return unless ($res->is_success);
-
-    my $parser = XML::LibXML->new;
-    my $doc = $parser->parse_string($res->content);
-    my $xpc = XML::LibXML::XPathContext->new($doc);
-
-    $self->module($xpc->findvalue(q|//cpandeps/module|));
-    $self->perl(Perl::Version->new($xpc->findvalue(q|//cpandeps/perl|)));
-    $self->os($xpc->findvalue(q|//cpandeps/os|));
-
-    my @dep_nodes = $xpc->findnodes(q|//cpandeps/dependency|);
-    my $dep_self_node = shift @dep_nodes;
-
-    my %dep_module;
-    for my $dep_node (@dep_nodes) {
-        next ($dep_node->findvalue(q|./textresult|) !~ /^core module$/i);
-
-        my $module = $dep_node->findvalue(q|./module|);
-        my $depth = $dep_node->findvalue(q|./depth|);
-        $dep_module{$module} = 1;
-
-        my $child = WebService::CPANTesters::Dependency->new(+{
-            start_depth => $depth,
-        });
-        $child->find_recursive($module);
+    ${$idx_ref}++;
+    while ($self->parse_dependency($dependency, $dep_nodes, $idx_ref)) {
+        ### $idx_ref
     }
-    $self->dependencies([keys %dep_module]);
+    
+    return 1;
 }
+
 
 1;
 __END__
