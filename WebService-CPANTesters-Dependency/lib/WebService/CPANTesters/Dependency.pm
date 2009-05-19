@@ -83,7 +83,7 @@ sub find {
 #    my $dep_self_node = shift @dep_nodes;
 
     for (my $i = 0; $i < $#dep_nodes + 1; $i++) {
-        if ($self->parse($self, \@dep_nodes, \$i)) {
+        if ($self->_parse($self, \@dep_nodes, \$i)) {
             $i--;
         }
     }
@@ -91,7 +91,7 @@ sub find {
     1;
 }
 
-sub parse {
+sub _parse {
     my ($self, $parent, $dep_nodes, $idx_ref) = @_;
 
     my $dep_node = $dep_nodes->[$$idx_ref];
@@ -117,7 +117,7 @@ sub parse {
     $parent->dependencies->push($dependency);
 
     ${$idx_ref}++;
-    $self->parse($dependency, $dep_nodes, $idx_ref);
+    $self->_parse($dependency, $dep_nodes, $idx_ref);
     
     return 1;
 }
@@ -130,15 +130,15 @@ sub sort {
 
     for my $dep (@{$deps->to_a}) {
         if (scalar @{$dep->dependencies} <= 0) {
-            push(@$ret, +{ module => $dep->module, depth => $dep->depth });
+            push(@$ret, $dep);
         }
         $self->sort($dep, $ret, $dep->dependencies);
         if (scalar @{$dep->dependencies} > 0) {
-            push(@$ret, +{ module => $dep->module, depth => $dep->depth });
+            push(@$ret, $dep);
         }
     }
 
-    return @$ret;
+    return wantarray ? @$ret : $ret;
 }
 
 sub list {
@@ -148,11 +148,11 @@ sub list {
     $deps   ||= $parent->dependencies;
 
     for my $dep (@{$deps->to_a}) {
-        push(@$ret, +{ module =>  $dep->module, depth => $dep->depth });
+        push(@$ret, $dep);
         $self->list($dep, $ret, $dep->dependencies);
     }
 
-    return @$ret;
+    return wantarray ? @$ret : $ret;
 }
 
 1;
