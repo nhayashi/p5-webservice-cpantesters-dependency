@@ -1,15 +1,11 @@
 use strict;
-use Test::More tests => 1;
+use Test::More tests => 2;
 
 use WebService::CPANTesters::Dependency;
 
-my $deps = WebService::CPANTesters::Dependency->new(+{
-    module => 'Catalyst::Runtime',
-    perl => '5.8.5',
-    os => 'Linux',
-    xml => 1,
-});
-$deps->find;
+my $dep = WebService::CPANTesters::Dependency->new();
+$dep->find('Catalyst::Runtime');
 
-isa_ok($deps, 'WebService::CPANTesters::Dependency');
+is($dep->{module}, 'Catalyst::Runtime');
+is($dep->{depth}, 0);
 

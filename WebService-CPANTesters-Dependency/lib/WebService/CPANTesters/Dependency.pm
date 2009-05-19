@@ -80,89 +80,80 @@ sub find {
     $self->os($xpc->findvalue(q|//cpandeps/os|));
 
     my @dep_nodes = $xpc->findnodes(q|//cpandeps/dependency|);
-    my $dep_self_node = shift @dep_nodes;
+#    my $dep_self_node = shift @dep_nodes;
 
-    for (my $i = 0; $i < $#dep_nodes; $i++) {
-        my $dep_node = $dep_nodes[$i];
-        if ($self->parse_dependency($self, \@dep_nodes, \$i)) {
+    for (my $i = 0; $i < $#dep_nodes + 1; $i++) {
+        if ($self->parse($self, \@dep_nodes, \$i)) {
             $i--;
         }
     }
 
-#     for my $dep_node (@dep_nodes) {
-#         my $dep_args = +{
-#             module => $dep_node->findvalue(q|./module|),
-#             depth  => $dep_node->findvalue(q|./depth|),
-#             warning => $dep_node->findvalue(q|./warning|),
-#             text_result => $dep_node->findvalue(q|./textresult|),
-#             is_pure_perl => $dep_node->findvalue(q|./ispureperl|),
-#             total_results => $dep_node->findvalue(q|./totalresults|),
-#             passes => $dep_node->findvalue(q|./passes|) || undef,
-#             fails => $dep_node->findvalue(q|./fails|) || undef,
-#             nas => $dep_node->findvalue(q|./nas|) || undef,
-#         };
-
-#         $dep_args->{is_core} = (defined $dep_args->{text_result} && $dep_args->{text_result} eq 'Core module') ? 1 : 0;
-#         $dep_args->{start_depth} = $self->start_depth + $dep_args->{depth};
-
-#         my $dependency = WebService::CPANTesters::Dependency->new($dep_args);
-
-#         ### $dep_args
-
-#         $self->dependencies->push($dependency);
-#     }
     1;
 }
 
-sub naritoshi {
+sub parse {
+    my ($self, $parent, $dep_nodes, $idx_ref) = @_;
+
+    my $dep_node = $dep_nodes->[$$idx_ref];
+    return 0 unless ($dep_node);
+    return 0 unless ($dep_node->findvalue(q|./depth|) > $parent->depth);
+
+    my $dep_args = +{
+        module        => $dep_node->findvalue(q|./module|),
+        depth         => $dep_node->findvalue(q|./depth|),
+        warning       => $dep_node->findvalue(q|./warning|),
+        text_result   => $dep_node->findvalue(q|./textresult|),
+        is_pure_perl  => $dep_node->findvalue(q|./ispureperl|),
+        total_results => $dep_node->findvalue(q|./totalresults|),
+        passes        => $dep_node->findvalue(q|./passes|) || undef,
+        fails         => $dep_node->findvalue(q|./fails|) || undef,
+        unknowns      => $dep_node->findvalue(q|./unknowns|) || undef,
+        nas           => $dep_node->findvalue(q|./nas|) || undef,
+    };
+
+    $dep_args->{is_core} = (defined $dep_args->{text_result} && $dep_args->{text_result} eq 'Core module') ? 1 : 0;
+
+    my $dependency = WebService::CPANTesters::Dependency->new($dep_args);
+    $parent->dependencies->push($dependency);
+
+    ${$idx_ref}++;
+    $self->parse($dependency, $dep_nodes, $idx_ref);
+    
+    return 1;
+}
+
+sub sort {
     my ($self, $parent, $ret, $deps) = @_;
     $parent ||= $self;
     $ret    ||= [];
     $deps   ||= $parent->dependencies;
 
     for my $dep (@{$deps->to_a}) {
-        ### $dep
-        push(@$ret, +{ module =>  $dep->module, depth => $dep->depth });
-        $self->naritoshi($dep, $ret, $dep->dependencies);
+        if (scalar @{$dep->dependencies} <= 0) {
+            push(@$ret, +{ module => $dep->module, depth => $dep->depth });
+        }
+        $self->sort($dep, $ret, $dep->dependencies);
+        if (scalar @{$dep->dependencies} > 0) {
+            push(@$ret, +{ module => $dep->module, depth => $dep->depth });
+        }
     }
 
     return @$ret;
 }
 
+sub list {
+    my ($self, $parent, $ret, $deps) = @_;
+    $parent ||= $self;
+    $ret    ||= [];
+    $deps   ||= $parent->dependencies;
 
-sub parse_dependency {
-    my ($self, $parent, $dep_nodes, $idx_ref) = @_;
-
-    my $dep_node = $dep_nodes->[$$idx_ref];
-    return 0 unless ($dep_node);
-    return 0 unless ($dep_node->findvalue(q|./depth|) > $parent->depth);
-    
-    my $dep_args = +{
-        module => $dep_node->findvalue(q|./module|),
-        depth  => $dep_node->findvalue(q|./depth|),
-        warning => $dep_node->findvalue(q|./warning|),
-        text_result => $dep_node->findvalue(q|./textresult|),
-        is_pure_perl => $dep_node->findvalue(q|./ispureperl|),
-        total_results => $dep_node->findvalue(q|./totalresults|),
-        passes => $dep_node->findvalue(q|./passes|) || undef,
-        fails => $dep_node->findvalue(q|./fails|) || undef,
-        nas => $dep_node->findvalue(q|./nas|) || undef,
-    };
-
-    $dep_args->{is_core} = (defined $dep_args->{text_result} && $dep_args->{text_result} eq 'Core module') ? 1 : 0;
-    # $dep_args->{start_depth} = $parent->start_depth + $dep_args->{depth};
-
-    my $dependency = WebService::CPANTesters::Dependency->new($dep_args);
-    $parent->dependencies->push($dependency);
-
-    ${$idx_ref}++;
-    while ($self->parse_dependency($dependency, $dep_nodes, $idx_ref)) {
-        ### $idx_ref
+    for my $dep (@{$deps->to_a}) {
+        push(@$ret, +{ module =>  $dep->module, depth => $dep->depth });
+        $self->list($dep, $ret, $dep->dependencies);
     }
-    
-    return 1;
-}
 
+    return @$ret;
+}
 
 1;
 __END__
