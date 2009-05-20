@@ -61,12 +61,8 @@ sub find {
         module => $module,
     };
 
-    ### $args
-    
     my $uri = $ENDPOINT_TMPL->process($args);
 
-    ### $uri
-    
     my $ua  = LWP::UserAgent->new;
     my $res = $ua->get($uri);
 
@@ -81,7 +77,7 @@ sub find {
     $self->os($xpc->findvalue(q|//cpandeps/os|));
 
     my @dep_nodes = $xpc->findnodes(q|//cpandeps/dependency|);
-#    my $dep_self_node = shift @dep_nodes;
+    # my $dep_self_node = shift @dep_nodes;
 
     for (my $i = 0; $i < $#dep_nodes + 1; $i++) {
         if ($self->_parse($self, \@dep_nodes, \$i)) {
