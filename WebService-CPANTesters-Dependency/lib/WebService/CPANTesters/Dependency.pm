@@ -7,11 +7,12 @@ our $VERSION = '0.01';
 
 use base qw/Class::Accessor::Fast/;
 
-use Carp qw/croak/;
+use Carp::Clan qw/croak/;
 use List::Rubyish;
 use LWP::UserAgent;
 use Perl::Version;
 use URI::Template::Restrict;
+use XML::LibXML;
 use XML::LibXML::XPathContext;
 use Smart::Comments;
 
@@ -160,15 +161,21 @@ __END__
 
 =head1 NAME
 
-WebService::CPANTesters::Dependency -
+WebService::CPANTesters::Dependency - Frontend deps.cpantesters.org WebAPI
 
 =head1 SYNOPSIS
 
+  use YAML;
   use WebService::CPANTesters::Dependency;
+  
+  my $dep = WebService::CPANTesters::Dependency->new;
+  $dep->find(q|Catalyst::Runtime|);
+  local $, = "\n";
+  print map { sprintf("%s%s", "  " x $_->depth, $_->module) } $dep->list;
 
 =head1 DESCRIPTION
 
-WebService::CPANTesters::Dependency is
+WebService::CPANTesters::Dependency is deps.cpantesters.org WebAPI frontend.
 
 =head1 AUTHOR
 
