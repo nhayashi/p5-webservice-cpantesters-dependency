@@ -77,7 +77,12 @@ sub find {
     $self->os($xpc->findvalue(q|//cpandeps/os|));
 
     my @dep_nodes = $xpc->findnodes(q|//cpandeps/dependency|);
-    # my $dep_self_node = shift @dep_nodes;
+    my $dep_args = $self->_parse_node($self, [ shift @dep_nodes ], \0);
+
+    for my $attr (keys %$dep_args) {
+        next if ($attr eq 'module');
+        $self->$attr($dep_args->{$attr});
+    }
 
     for (my $i = 0; $i < $#dep_nodes + 1; $i++) {
         if ($self->_parse($self, \@dep_nodes, \$i)) {
@@ -91,9 +96,25 @@ sub find {
 sub _parse {
     my ($self, $parent, $dep_nodes, $idx_ref) = @_;
 
+    my $dep_args = $self->_parse_node($parent, $dep_nodes, $idx_ref);
+    return unless ($dep_args);
+    
+    my $dependency = WebService::CPANTesters::Dependency->new($dep_args);
+    $parent->dependencies->push($dependency);
+
+    ${$idx_ref}++;
+    $self->_parse($dependency, $dep_nodes, $idx_ref);
+    
+    return 1;
+}
+
+sub _parse_node {
+    my ($self, $parent, $dep_nodes, $idx_ref) = @_;
+    
     my $dep_node = $dep_nodes->[$$idx_ref];
-    return 0 unless ($dep_node);
-    return 0 unless ($dep_node->findvalue(q|./depth|) > $parent->depth);
+
+    return unless ($dep_node);
+    return unless ($dep_node->findvalue(q|./depth|) >= $parent->depth);
 
     my $dep_args = +{
         module        => $dep_node->findvalue(q|./module|),
@@ -110,14 +131,9 @@ sub _parse {
 
     $dep_args->{is_core} = (defined $dep_args->{text_result} && $dep_args->{text_result} eq 'Core module') ? 1 : 0;
 
-    my $dependency = WebService::CPANTesters::Dependency->new($dep_args);
-    $parent->dependencies->push($dependency);
-
-    ${$idx_ref}++;
-    $self->_parse($dependency, $dep_nodes, $idx_ref);
-    
-    return 1;
+    return $dep_args;
 }
+
 
 sub sort {
     my ($self, $parent, $ret, $deps) = @_;
