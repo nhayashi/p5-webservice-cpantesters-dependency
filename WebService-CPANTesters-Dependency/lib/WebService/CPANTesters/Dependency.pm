@@ -8,6 +8,7 @@ our $VERSION = '0.01';
 use base qw/Class::Accessor::Fast/;
 
 use Carp::Clan qw/croak/;
+#use Carp::Clan;
 use List::Rubyish;
 use LWP::UserAgent;
 use Perl::Version;
@@ -113,7 +114,7 @@ sub _parse_node {
     my $dep_node = $dep_nodes->[$$idx_ref];
 
     return unless ($dep_node);
-    return unless ($dep_node->findvalue(q|./depth|) >= $parent->depth);
+    return unless ($dep_node->findvalue(q|./depth|) > $parent->depth);
 
     my $dep_args = +{
         module        => $dep_node->findvalue(q|./module|),
@@ -122,10 +123,10 @@ sub _parse_node {
         text_result   => $dep_node->findvalue(q|./textresult|),
         is_pure_perl  => $dep_node->findvalue(q|./ispureperl|),
         total_results => $dep_node->findvalue(q|./totalresults|),
-        passes        => $dep_node->findvalue(q|./passes|) || undef,
-        fails         => $dep_node->findvalue(q|./fails|) || undef,
-        unknowns      => $dep_node->findvalue(q|./unknowns|) || undef,
-        nas           => $dep_node->findvalue(q|./nas|) || undef,
+        passes        => $dep_node->findvalue(q|./passes|),
+        fails         => $dep_node->findvalue(q|./fails|),
+        unknowns      => $dep_node->findvalue(q|./unknowns|),
+        nas           => $dep_node->findvalue(q|./nas|),
     };
 
     $dep_args->{is_core} = (defined $dep_args->{text_result} && $dep_args->{text_result} eq 'Core module') ? 1 : 0;
@@ -133,35 +134,26 @@ sub _parse_node {
     return $dep_args;
 }
 
-
-sub sort {
-    my ($self, $parent, $ret, $deps) = @_;
-    $parent ||= $self;
-    $ret    ||= [];
-    $deps   ||= $parent->dependencies;
-
-    for my $dep (@{$deps->to_a}) {
-        if (scalar @{$dep->dependencies} <= 0) {
-            push(@$ret, $dep);
-        }
-        $self->sort($dep, $ret, $dep->dependencies);
-        if (scalar @{$dep->dependencies} > 0) {
-            push(@$ret, $dep);
-        }
-    }
-
-    return wantarray ? @$ret : $ret;
-}
-
 sub list {
-    my ($self, $parent, $ret, $deps) = @_;
-    $parent ||= $self;
-    $ret    ||= [];
-    $deps   ||= $parent->dependencies;
+    my ($self, $is_sort, $parent, $ret, $deps) = @_;
+    $is_sort ||= 0;
+    $parent  ||= $self;
+    $ret     ||= [];
+    $deps    ||= $parent->dependencies;
 
     for my $dep (@{$deps->to_a}) {
-        push(@$ret, $dep);
-        $self->list($dep, $ret, $dep->dependencies);
+        if ($is_sort) {
+            if (scalar @{$dep->dependencies} <= 0) {
+                push(@$ret, $dep);
+            }
+            $self->list($is_sort, $dep, $ret, $dep->dependencies);
+            if (scalar @{$dep->dependencies} > 0) {
+                push(@$ret, $dep);
+            }
+        } else {
+            push(@$ret, $dep);
+            $self->list($is_sort, $dep, $ret, $dep->dependencies);
+        }
     }
 
     return wantarray ? @$ret : $ret;

@@ -16,8 +16,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>10</totalresults>
-    <passes>10</passes>
+    <totalresults>44</totalresults>
+    <passes>44</passes>
     <fails>0</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -36,10 +36,10 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>42</totalresults>
-    <passes>41</passes>
+    <totalresults>69</totalresults>
+    <passes>67</passes>
     <fails>0</fails>
-    <unknowns>1</unknowns>
+    <unknowns>2</unknowns>
     <nas>0</nas>
   </dependency>
   <dependency>
@@ -48,8 +48,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>382</totalresults>
-    <passes>381</passes>
+    <totalresults>385</totalresults>
+    <passes>384</passes>
     <fails>1</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -76,8 +76,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>320</totalresults>
-    <passes>320</passes>
+    <totalresults>323</totalresults>
+    <passes>323</passes>
     <fails>0</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -112,8 +112,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>303</totalresults>
-    <passes>303</passes>
+    <totalresults>309</totalresults>
+    <passes>309</passes>
     <fails>0</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -124,8 +124,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>295</totalresults>
-    <passes>293</passes>
+    <totalresults>301</totalresults>
+    <passes>299</passes>
     <fails>1</fails>
     <unknowns>0</unknowns>
     <nas>1</nas>
@@ -136,8 +136,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>384</totalresults>
-    <passes>384</passes>
+    <totalresults>390</totalresults>
+    <passes>390</passes>
     <fails>0</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -148,8 +148,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>190</totalresults>
-    <passes>190</passes>
+    <totalresults>195</totalresults>
+    <passes>195</passes>
     <fails>0</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -160,8 +160,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>174</totalresults>
-    <passes>174</passes>
+    <totalresults>179</totalresults>
+    <passes>179</passes>
     <fails>0</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -172,8 +172,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>184</totalresults>
-    <passes>184</passes>
+    <totalresults>188</totalresults>
+    <passes>188</passes>
     <fails>0</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -184,8 +184,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>185</totalresults>
-    <passes>185</passes>
+    <totalresults>189</totalresults>
+    <passes>189</passes>
     <fails>0</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -196,8 +196,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>409</totalresults>
-    <passes>408</passes>
+    <totalresults>413</totalresults>
+    <passes>412</passes>
     <fails>1</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -208,8 +208,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>108</totalresults>
-    <passes>108</passes>
+    <totalresults>122</totalresults>
+    <passes>122</passes>
     <fails>0</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -220,8 +220,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>87</totalresults>
-    <passes>87</passes>
+    <totalresults>92</totalresults>
+    <passes>92</passes>
     <fails>0</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -232,8 +232,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>56</totalresults>
-    <passes>56</passes>
+    <totalresults>59</totalresults>
+    <passes>59</passes>
     <fails>0</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -244,8 +244,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>64</totalresults>
-    <passes>59</passes>
+    <totalresults>71</totalresults>
+    <passes>66</passes>
     <fails>5</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -256,8 +256,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>131</totalresults>
-    <passes>131</passes>
+    <totalresults>141</totalresults>
+    <passes>141</passes>
     <fails>0</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -268,8 +268,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>80</totalresults>
-    <passes>80</passes>
+    <totalresults>90</totalresults>
+    <passes>90</passes>
     <fails>0</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -280,9 +280,9 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>20</totalresults>
-    <passes>20</passes>
-    <fails>0</fails>
+    <totalresults>60</totalresults>
+    <passes>59</passes>
+    <fails>1</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
   </dependency>
@@ -308,8 +308,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>44</totalresults>
-    <passes>44</passes>
+    <totalresults>65</totalresults>
+    <passes>65</passes>
     <fails>0</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -320,8 +320,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>340</totalresults>
-    <passes>313</passes>
+    <totalresults>341</totalresults>
+    <passes>314</passes>
     <fails>25</fails>
     <unknowns>2</unknowns>
     <nas>0</nas>
@@ -332,8 +332,8 @@
     <warning>Couldn't get dependencies</warning>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>313</totalresults>
-    <passes>311</passes>
+    <totalresults>316</totalresults>
+    <passes>314</passes>
     <fails>1</fails>
     <unknowns>1</unknowns>
     <nas>0</nas>
@@ -344,8 +344,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>98</totalresults>
-    <passes>97</passes>
+    <totalresults>104</totalresults>
+    <passes>103</passes>
     <fails>1</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -372,8 +372,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>277</totalresults>
-    <passes>259</passes>
+    <totalresults>278</totalresults>
+    <passes>260</passes>
     <fails>18</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -392,8 +392,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>328</totalresults>
-    <passes>327</passes>
+    <totalresults>331</totalresults>
+    <passes>330</passes>
     <fails>0</fails>
     <unknowns>1</unknowns>
     <nas>0</nas>
@@ -404,8 +404,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>192</totalresults>
-    <passes>191</passes>
+    <totalresults>196</totalresults>
+    <passes>195</passes>
     <fails>1</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -432,8 +432,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>163</totalresults>
-    <passes>162</passes>
+    <totalresults>167</totalresults>
+    <passes>166</passes>
     <fails>0</fails>
     <unknowns>1</unknowns>
     <nas>0</nas>
@@ -444,8 +444,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>398</totalresults>
-    <passes>398</passes>
+    <totalresults>403</totalresults>
+    <passes>403</passes>
     <fails>0</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -456,8 +456,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>342</totalresults>
-    <passes>341</passes>
+    <totalresults>345</totalresults>
+    <passes>344</passes>
     <fails>0</fails>
     <unknowns>1</unknowns>
     <nas>0</nas>
@@ -468,8 +468,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>289</totalresults>
-    <passes>260</passes>
+    <totalresults>293</totalresults>
+    <passes>264</passes>
     <fails>0</fails>
     <unknowns>0</unknowns>
     <nas>29</nas>
@@ -480,8 +480,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>255</totalresults>
-    <passes>252</passes>
+    <totalresults>259</totalresults>
+    <passes>256</passes>
     <fails>2</fails>
     <unknowns>0</unknowns>
     <nas>1</nas>
@@ -492,8 +492,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>354</totalresults>
-    <passes>353</passes>
+    <totalresults>358</totalresults>
+    <passes>357</passes>
     <fails>0</fails>
     <unknowns>0</unknowns>
     <nas>1</nas>
@@ -504,8 +504,8 @@
     <warning>Couldn't get dependencies</warning>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>15</totalresults>
-    <passes>15</passes>
+    <totalresults>47</totalresults>
+    <passes>47</passes>
     <fails>0</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -516,8 +516,8 @@
     <warning>Couldn't get dependencies</warning>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>60</totalresults>
-    <passes>60</passes>
+    <totalresults>68</totalresults>
+    <passes>68</passes>
     <fails>0</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -536,8 +536,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>26</totalresults>
-    <passes>26</passes>
+    <totalresults>39</totalresults>
+    <passes>39</passes>
     <fails>0</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -556,8 +556,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>186</totalresults>
-    <passes>185</passes>
+    <totalresults>190</totalresults>
+    <passes>189</passes>
     <fails>1</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -576,8 +576,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>187</totalresults>
-    <passes>186</passes>
+    <totalresults>194</totalresults>
+    <passes>193</passes>
     <fails>1</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -604,8 +604,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>249</totalresults>
-    <passes>243</passes>
+    <totalresults>252</totalresults>
+    <passes>246</passes>
     <fails>6</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -624,8 +624,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>73</totalresults>
-    <passes>73</passes>
+    <totalresults>82</totalresults>
+    <passes>82</passes>
     <fails>0</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -636,8 +636,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>356</totalresults>
-    <passes>355</passes>
+    <totalresults>359</totalresults>
+    <passes>358</passes>
     <fails>1</fails>
     <unknowns>0</unknowns>
     <nas>0</nas>
@@ -656,8 +656,8 @@
     <warning/>
     <textresult/>
     <ispureperl>?</ispureperl>
-    <totalresults>341</totalresults>
-    <passes>312</passes>
+    <totalresults>344</totalresults>
+    <passes>315</passes>
     <fails>1</fails>
     <unknowns>0</unknowns>
     <nas>28</nas>
