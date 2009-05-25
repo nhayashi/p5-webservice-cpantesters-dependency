@@ -103,8 +103,9 @@ sub _parse {
     $parent->dependencies->push($dependency);
 
     ${$idx_ref}++;
-    $self->_parse($dependency, $dep_nodes, $idx_ref);
-    
+    while ($self->_parse($dependency, $dep_nodes, $idx_ref)) {
+    }
+
     return 1;
 }
 
