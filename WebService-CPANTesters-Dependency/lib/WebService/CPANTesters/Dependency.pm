@@ -8,7 +8,6 @@ our $VERSION = '0.01';
 use base qw/Class::Accessor::Fast/;
 
 use Carp::Clan qw/croak/;
-#use Carp::Clan;
 use List::Rubyish;
 use LWP::UserAgent;
 use Perl::Version;
@@ -31,7 +30,9 @@ __PACKAGE__->mk_accessors(qw/
     nas
     is_core
     dependencies
- /);
+    chance_of_success
+    debug
+/);
 
 our ($PERL_VERSION) = Perl::Version->new($])->normal =~ m/^v(.*)$/;
 our $ENDPOINT_TMPL  = URI::Template::Restrict->new(
@@ -75,9 +76,14 @@ sub find {
     $self->module($xpc->findvalue(q|//cpandeps/module|));
     $self->perl(Perl::Version->new($xpc->findvalue(q|//cpandeps/perl|)));
     $self->os($xpc->findvalue(q|//cpandeps/os|));
+    $self->chance_of_success(
+        $xpc->findvalue(q|//cpandeps/chanceofsuccess|) =~ /(\d+%)/);
+    $self->debug($xpc->findvalue(q|//cpandeps/debug|));
 
     my @dep_nodes = $xpc->findnodes(q|//cpandeps/dependency|);
-    my $dep_args = $self->_parse_node($self, [ shift @dep_nodes ], \0);
+    my $dep_node = shift @dep_nodes;
+    my $dep_args =
+        $self->_parse_node($dep_node, $self->_findvalue($dep_node, q|./depth|));
 
     for my $attr (keys %$dep_args) {
         next if ($attr eq 'module');
@@ -96,7 +102,13 @@ sub find {
 sub _parse {
     my ($self, $parent, $dep_nodes, $idx_ref) = @_;
 
-    my $dep_args = $self->_parse_node($parent, $dep_nodes, $idx_ref);
+    my $dep_node = $dep_nodes->[$$idx_ref];
+    return unless ($dep_node);
+
+    my $self_depth = $self->_findvalue($dep_node, q|./depth|);
+    return unless ($self_depth > $parent->depth);
+
+    my $dep_args = $self->_parse_node($dep_node, $self_depth);
     return unless ($dep_args);
     
     my $dependency = WebService::CPANTesters::Dependency->new($dep_args);
@@ -110,29 +122,30 @@ sub _parse {
 }
 
 sub _parse_node {
-    my ($self, $parent, $dep_nodes, $idx_ref) = @_;
+    my ($self, $dep_node, $self_depth) = @_;
     
-    my $dep_node = $dep_nodes->[$$idx_ref];
-
-    return unless ($dep_node);
-    return unless ($dep_node->findvalue(q|./depth|) > $parent->depth);
-
     my $dep_args = +{
-        module        => $dep_node->findvalue(q|./module|),
-        depth         => $dep_node->findvalue(q|./depth|),
-        warning       => $dep_node->findvalue(q|./warning|),
-        text_result   => $dep_node->findvalue(q|./textresult|),
-        is_pure_perl  => $dep_node->findvalue(q|./ispureperl|),
-        total_results => $dep_node->findvalue(q|./totalresults|),
-        passes        => $dep_node->findvalue(q|./passes|),
-        fails         => $dep_node->findvalue(q|./fails|),
-        unknowns      => $dep_node->findvalue(q|./unknowns|),
-        nas           => $dep_node->findvalue(q|./nas|),
+        module        => $self->_findvalue($dep_node, q|./module|),
+        depth         => $self_depth,
+        warning       => $self->_findvalue($dep_node, q|./warning|),
+        text_result   => $self->_findvalue($dep_node, q|./textresult|),
+        is_pure_perl  => $self->_findvalue($dep_node, q|./ispureperl|),
+        total_results => $self->_findvalue($dep_node, q|./totalresults|),
+        passes        => $self->_findvalue($dep_node, q|./passes|),
+        fails         => $self->_findvalue($dep_node, q|./fails|),
+        unknowns      => $self->_findvalue($dep_node, q|./unknowns|),
+        nas           => $self->_findvalue($dep_node, q|./nas|),
     };
 
     $dep_args->{is_core} = (defined $dep_args->{text_result} && $dep_args->{text_result} eq 'Core module') ? 1 : 0;
 
     return $dep_args;
+}
+
+sub _findvalue {
+    my ($self, $node, $xpath_exp) = @_;
+    my $ret = $node->findvalue($xpath_exp);
+    defined $ret ? $ret : undef;
 }
 
 sub list {

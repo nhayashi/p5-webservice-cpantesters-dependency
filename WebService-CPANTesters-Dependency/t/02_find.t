@@ -1,5 +1,5 @@
 use lib qw(./t/lib);
-use Test::More tests => 14 * 3;
+use Test::More tests => 17 * 3;
 
 use Test::WebService::CPANTesters::Dependency;
 use WebService::CPANTesters::Dependency;
@@ -21,6 +21,8 @@ Test::WebService::CPANTesters::Dependency->init;
     is($dep->perl, $perl, 'perl version');
     is($dep->os, $os, 'OS type');
     is($dep->module, $module, 'module name');
+    is($dep->chance_of_success, '60%', 'chance of success is 60%');
+    is($dep->debug, '', 'debug is empty');
 
     is($dep->depth, 0, 'dependency depth');
     is($dep->warning, '', 'warnings element');
@@ -34,6 +36,7 @@ Test::WebService::CPANTesters::Dependency->init;
 
     is($dep->is_core, 0, 'core module');
     isa_ok($dep->dependencies, 'List::Rubyish', 'dependencies object');
+    cmp_ok(@{$dep->dependencies}, '==', 20, 'number of dependencies');
 }
 
 {
@@ -51,6 +54,8 @@ Test::WebService::CPANTesters::Dependency->init;
     is($dep->perl, $perl, 'perl version');
     is($dep->os, $os, 'OS type');
     is($dep->module, $module, 'module name');
+    is($dep->chance_of_success, '100%', 'chance of success is 100%');
+    is($dep->debug, '', 'debug is empty');
 
     is($dep->depth, 0, 'dependency depth');
     is($dep->warning, '', 'warnings element');
@@ -64,6 +69,7 @@ Test::WebService::CPANTesters::Dependency->init;
 
     is($dep->is_core, 0, 'core module');
     isa_ok($dep->dependencies, 'List::Rubyish', 'dependencies object');
+    cmp_ok(@{$dep->dependencies}, '==', 4, 'number of dependencies');
 }
 
 {
@@ -81,6 +87,8 @@ Test::WebService::CPANTesters::Dependency->init;
     is($dep->perl, $perl, 'perl version');
     is($dep->os, $os, 'OS type');
     is($dep->module, $module, 'module name');
+    is($dep->chance_of_success, '100%', 'chance of success is 100%');
+    is($dep->debug, '', 'debug is empty');
 
     is($dep->depth, 0, 'dependency depth');
     is($dep->warning, '', 'warnings element');
@@ -94,6 +102,6 @@ Test::WebService::CPANTesters::Dependency->init;
 
     is($dep->is_core, 0, 'core module');
     isa_ok($dep->dependencies, 'List::Rubyish', 'dependencies object');
-#    cmp_ok(scalar @$dep->dependencies, '==', 63, 'number of dependency modules');
+    cmp_ok(@{$dep->dependencies}, '==', 14, 'number of dependencies');
 }
 
